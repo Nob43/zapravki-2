@@ -192,3 +192,45 @@ section h2 { margin: 0; text-align: center; font-size: 5.65cqw; font-weight: 500
 .station-map-link span { font-size: 23px; line-height: 1; }
 .station-demo-note { margin: 14px 3px 0; font: 10px/1.5 Arial,sans-serif; color: #858b9e; }
 @media (max-width: 400px) { .station-hero { padding: 27px 20px 23px; gap: 14px; } .station-dialog-body { padding: 16px; } .station-dialog h2 { font-size: 38px; } .station-hero-icon { width: 53px; height: 64px; } .station-dialog-eyebrow { font-size: 8px; letter-spacing: 1px; } .station-facts { font-size: 12px; } .station-fuel-table td { padding: 9px; } }
+.profile-avatar { top: 14.6%; }
+.profile-screen .profile-name { top: 32.6%; }
+.profile-details { top: 37.3%; }
+.profile-balance { position: absolute; top: 54.6%; left: 3.5%; right: 1.5%; }
+.profile-balance-row { display: flex; align-items: center; gap: 1.6cqw; }
+.profile-balance-row p { flex-shrink: 0; }
+.profile-transactions { display: flex; align-items: center; gap: .7cqw; color: #11131f; text-decoration: none; white-space: nowrap; font-size: 3.8cqw; }
+.balance-plus { display: grid; place-items: center; width: 8cqw; height: 8cqw; border-radius: 2cqw; background: linear-gradient(135deg,#7797d3,#3261b5); color: white; box-shadow: -.5cqw .8cqw 1.5cqw #0003; font: 8.4cqw/.8 Arial,sans-serif; }
+.profile-actions { top: 64.5%; left: 23.5%; width: 53%; gap: 2cqw; }
+.profile-actions button { height: 13.8cqw; }
+.app-shell.show-transactions > .topbar,
+.app-shell.show-transactions > .search-area,
+.app-shell.show-transactions > .fuel-panel,
+.app-shell.show-transactions > .nearby-panel,
+.app-shell.show-transactions > .prices-panel { display: none; }
+.transactions-screen { position: absolute; inset: 0; padding: 5cqw 5cqw 12cqw; overflow-y: auto; background: radial-gradient(ellipse at 100% 0%,#e4e2fc,transparent 45%),linear-gradient(#f8f8ff 85%,#b6c4e5); }
+.transactions-header { display: flex; align-items: center; gap: 3cqw; color: #747d9b; font: 2.4cqw Arial,sans-serif; }
+.transactions-back { display: grid; place-items: center; width: 7cqw; height: 7cqw; border: 1px solid #dcdcf0; border-radius: 2.2cqw; background: #fff9; color: #274ba5; text-decoration: none; font: 4.5cqw Arial,sans-serif; }
+.transactions-screen > h2 { margin-top: 5cqw; text-align: left; font-size: 7cqw; }
+.transactions-subtitle { margin: 1.5cqw 0 5cqw; font: 2.5cqw/1.5 Arial,sans-serif; color: #7b8199; }
+.wallet-summary { padding: 4.5cqw; border-radius: 5cqw; color: white; background: radial-gradient(ellipse at 100% 0%,#6f8bd6,transparent 70%),linear-gradient(120deg,#193fa8,#335ac0); box-shadow: 0 2cqw 4cqw #254ba827; }
+.wallet-summary > span { font: 2.7cqw Arial,sans-serif; color: #dce4ff; }
+.wallet-summary > strong { display: block; margin: 1cqw 0 3cqw; font-size: 11cqw; font-weight: 500; line-height: 1.1; }
+.wallet-summary small { font-size: 6.5cqw; color: #dce4ff; }
+.wallet-summary > div { display: flex; gap: 7cqw; padding-top: 3cqw; border-top: 1px solid #ffffff30; font: 2.2cqw Arial,sans-serif; color: #dce4ff; }
+.wallet-summary b { display: block; margin-top: 1cqw; font-size: 3.1cqw; color: white; font-weight: 500; }
+.transaction-filters { display: flex; gap: 1cqw; padding: .8cqw; margin: 5cqw 0 3cqw; background: #e8e5f7; border-radius: 3cqw; }
+.transaction-filters button { flex: 1; padding: 2.3cqw .7cqw; border-radius: 2.3cqw; background: transparent; color: #737794; font: 2.5cqw Arial,sans-serif; }
+.transaction-filters button[aria-pressed="true"] { background: #fff; color: #284da7; box-shadow: 0 .5cqw 1cqw #33336615; }
+.transaction-card { display: flex; align-items: center; gap: 2.4cqw; margin-bottom: 2cqw; padding: 3cqw 2.5cqw; border: 1px solid #e5e3f2; border-radius: 3.5cqw; background: #ffffffd9; box-shadow: 0 .6cqw 1.5cqw #33336606; }
+.transaction-icon { display: grid; place-items: center; flex-shrink: 0; width: 7cqw; height: 7cqw; border-radius: 2.4cqw; background: #e4f3eb; color: #2c895c; font: 4.7cqw Arial,sans-serif; }
+.payment-icon { background: #ebe6fa; color: #7766a7; font-size: 3.5cqw; }
+.transaction-card h3 { margin: 0; font: 500 2.7cqw/1.3 Arial,sans-serif; }
+.transaction-card p { margin: .8cqw 0; font: 2.1cqw Arial,sans-serif; color: #7f849a; }
+.transaction-card time { font: 1.9cqw Arial,sans-serif; color: #9a9eb0; }
+.transaction-amount { margin-left: auto; text-align: right; white-space: nowrap; }
+.transaction-amount strong { display: block; font: 500 3cqw Arial,sans-serif; }
+.transaction-amount span { display: block; margin-top: 1.1cqw; font: 1.9cqw Arial,sans-serif; color: #8a90a3; }
+.topup-amount strong { color: #2e8b5f; }
+.transactions-note { margin: 4cqw 3cqw; text-align: center; font: 2.1cqw/1.5 Arial,sans-serif; color: #818ba1; }
+.app-shell.show-transactions { background: linear-gradient(#f8f8ff 85%,#b6c4e5); }
+.transactions-screen { bottom: 8%; padding-bottom: 5cqw; }
