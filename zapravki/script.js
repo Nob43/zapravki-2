@@ -115,20 +115,29 @@ function stationState(station, fuel) {
 function stationDistance(station) {
   return Math.hypot((station.lat - mapOrigin[0]) * 111.2, (station.lon - mapOrigin[1]) * 66.6);
 }
+let mapReadyPending = false;
 function initSamaraMap() {
-  if (!window.L) {
-    document.querySelector('#mapResults').textContent = 'Карта не загрузилась. Проверьте интернет и обновите страницу.';
+  if (!window.ymaps) {
+    document.querySelector('#mapResults').textContent = 'Яндекс Карта не загрузилась. Проверьте интернет и доступность ключа API.';
     return;
   }
-  if (!samaraMap) {
-    samaraMap = L.map('samaraMap', { attributionControl: false }).setView(mapOrigin, 12);
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
-      maxZoom: 19, attribution: 'Tiles &copy; Esri — Esri, HERE, Garmin and contributors'
-    }).addTo(samaraMap);
-    stationLayer = L.layerGroup().addTo(samaraMap);
+  if (samaraMap) {
+    samaraMap.container.fitToViewport();
+    updateStationMap();
+    return;
   }
-  samaraMap.invalidateSize();
-  updateStationMap();
+  if (mapReadyPending) return;
+  mapReadyPending = true;
+  ymaps.ready(() => {
+    try {
+      samaraMap = new ymaps.Map('samaraMap', {center: mapOrigin, zoom: 12, controls: ['zoomControl']});
+      stationLayer = new ymaps.GeoObjectCollection();
+      samaraMap.geoObjects.add(stationLayer);
+      updateStationMap();
+    } catch (error) {
+      document.querySelector('#mapResults').textContent = 'Не удалось открыть Яндекс Карту. Проверьте настройки ключа API.';
+    } finally { mapReadyPending = false; }
+  });
 }
 function updateStationMap() {
   if (!samaraMap) return;
@@ -141,7 +150,7 @@ function updateStationMap() {
     .filter(station => (!available || station.stock > 0) && (!noQueue || station.wait === 0)
       && (!query || `${station.name} ${station.address}`.toLocaleLowerCase('ru').includes(query)))
     .sort((a, b) => a[sort] - b[sort] || a.distance - b.distance);
-  stationLayer.clearLayers();
+  stationLayer.removeAll();
   const results = document.querySelector('#mapResults');
   results.replaceChildren();
   results.classList.toggle('has-query', Boolean(query));
@@ -159,51 +168,51 @@ function updateStationMap() {
     }
     const note = document.createElement('small');
     note.textContent = 'Наличие, цены и очередь — демонстрационные'; content.append(note);
-    const marker = L.marker([station.lat, station.lon], {
-      title: `${station.name}: ${stockLabels[station.stock]}`,
-      icon: L.divIcon({ className: 'station-marker', html: `<span style="background:${stockColors[station.stock]}"><b>⛽</b></span>`, iconSize: [30, 38], iconAnchor: [15, 36], popupAnchor: [0, -34] })
-    }).bindPopup(content).addTo(stationLayer);
+    const marker = new ymaps.Placemark([station.lat, station.lon], {
+      hintContent: content.querySelector('strong').innerHTML,
+      balloonContent: content.innerHTML
+    }, {preset: 'islands#icon', iconColor: stockColors[station.stock]});
+    stationLayer.add(marker);
     if (query) {
       const button = document.createElement('button'); button.type = 'button';
       button.textContent = `${station.name}${station.address ? ' · ' + station.address : ''} · ${stockLabels[station.stock]}`;
-      button.addEventListener('click', () => { samaraMap.setView([station.lat, station.lon], 15); marker.openPopup(); results.classList.remove('has-query'); results.replaceChildren(summary); });
+      button.addEventListener('click', () => { samaraMap.setCenter([station.lat, station.lon], 15); marker.balloon.open(); results.classList.remove('has-query'); results.replaceChildren(summary); });
       results.append(button);
     }
   });
 }
 let addressMarker;
-let addressRequest;
+let addressSearchId = 0;
 let lastAddressSearch = 0;
 document.querySelector('.map-search').addEventListener('submit', async event => {
   event.preventDefault(); updateStationMap();
   if (!samaraMap) return;
-  if (stationLayer.getLayers().length) {
-    samaraMap.fitBounds(L.featureGroup(stationLayer.getLayers()).getBounds(), { padding: [35, 35], maxZoom: 15 });
+  if (stationLayer.getLength()) {
+    samaraMap.setBounds(stationLayer.getBounds(), {zoomMargin: 35, checkZoomRange: true});
     return;
   }
   const query = document.querySelector('#mapQuery').value.trim();
   if (!query || Date.now() - lastAddressSearch < 1100) return;
   lastAddressSearch = Date.now();
-  addressRequest?.abort();
-  addressRequest = new AbortController();
+  const searchId = ++addressSearchId;
   const results = document.querySelector('#mapResults');
   results.textContent = 'Ищем адрес в Самаре…';
-  const timeout = setTimeout(() => addressRequest.abort(), 10000);
+  let timeout;
   try {
-    const params = new URLSearchParams({format:'jsonv2', q:`Самара, ${query}`, countrycodes:'ru', viewbox:'49.8,53.6,50.5,53.05', bounded:'1', limit:'1', 'accept-language':'ru'});
-    const response = await fetch(`https://nominatim.openstreetmap.org/search?${params}`, {signal:addressRequest.signal});
-    if (!response.ok) throw new Error('Address search unavailable');
-    const places = await response.json();
-    if (document.querySelector('#mapQuery').value.trim() !== query) return;
-    if (!places.length) { results.textContent = 'Адрес не найден в Самаре. Уточните улицу и номер дома.'; return; }
-    if (addressMarker) addressMarker.remove();
-    const place = places[0];
-    const label = document.createElement('span'); label.textContent = place.display_name;
-    addressMarker = L.circleMarker([Number(place.lat), Number(place.lon)], {radius:9, color:'#1944ac', fillOpacity:.8}).addTo(samaraMap).bindPopup(label);
+    const response = await Promise.race([
+      ymaps.geocode(`Самара, ${query}`, {boundedBy: [[53.05, 49.8], [53.6, 50.5]], strictBounds: true, results: 1}),
+      new Promise((_, reject) => { timeout = setTimeout(() => reject(new Error('timeout')), 10000); })
+    ]);
+    if (searchId !== addressSearchId || document.querySelector('#mapQuery').value.trim() !== query) return;
+    const place = response.geoObjects.get(0);
+    if (!place) { results.textContent = 'Адрес не найден в Самаре. Уточните улицу и номер дома.'; return; }
+    if (addressMarker) samaraMap.geoObjects.remove(addressMarker);
+    addressMarker = place;
+    samaraMap.geoObjects.add(addressMarker);
     document.querySelector('#mapQuery').value = '';
     updateStationMap();
-    samaraMap.setView(addressMarker.getLatLng(), 15);
-    addressMarker.openPopup();
+    samaraMap.setCenter(addressMarker.geometry.getCoordinates(), 15);
+    addressMarker.balloon.open();
   } catch (error) {
     if (document.querySelector('#mapQuery').value.trim() === query) results.textContent = 'Поиск адреса недоступен. Попробуйте ещё раз.';
   } finally { clearTimeout(timeout); }
@@ -221,3 +230,74 @@ const samaraStations = [{"lon":50.2248807,"name":"Олви","id":250971165,"addr
 
 
 
+
+const stationDialog = document.querySelector('#stationDialog');
+const nearbyStationDetails = {
+  14: { osmId: 12703481064, rating: '4,7 из 5', hours: 'Круглосуточно', price95: 67.80 },
+  20: { osmId: 530230447, rating: '4,5 из 5', hours: 'Круглосуточно', price95: 67.80 },
+  11: { osmId: 12703481011, rating: '4,8 из 5', hours: 'Ежедневно, 06:00–23:00', price95: 67.50 }
+};
+let activeStation;
+let userCoordinates;
+function distanceKm(from, to) {
+  const rad = value => value * Math.PI / 180;
+  const dLat = rad(to[0] - from[0]);
+  const dLon = rad(to[1] - from[1]);
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(rad(from[0])) * Math.cos(rad(to[0])) * Math.sin(dLon / 2) ** 2;
+  return 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(Math.max(0, 1 - a)));
+}
+function showStationDistance() {
+  document.querySelector('#stationDistance').textContent = userCoordinates
+    ? `${distanceKm(userCoordinates, [activeStation.lat, activeStation.lon]).toLocaleString('ru-RU', {maximumFractionDigits: 1})} км по прямой`
+    : 'Определите местоположение';
+}
+document.querySelectorAll('[data-station]').forEach(button => {
+  button.addEventListener('click', () => {
+    const number = button.dataset.station;
+    const details = nearbyStationDetails[number];
+    activeStation = samaraStations.find(station => station.id === details.osmId);
+    document.querySelector('#stationDialogTitle').textContent = `АЗС №${number}`;
+    document.querySelector('#stationBrand').textContent = activeStation.name;
+    document.querySelector('#stationAddress').textContent = `Самара, ${activeStation.address}`;
+    document.querySelector('#stationRating').textContent = `★ ${details.rating}`;
+    document.querySelector('#stationHours').textContent = details.hours;
+    document.querySelector('#stationLocationStatus').textContent = '';
+    showStationDistance();
+    const selectedFuel = document.querySelector('.fuel-types .selected').textContent;
+    const rows = document.querySelector('#stationFuelRows'); rows.replaceChildren();
+    fuelNames.forEach(fuel => {
+      const state = stationState(activeStation, fuel);
+      const row = document.createElement('tr');
+      row.classList.toggle('current-fuel', fuel === selectedFuel);
+      const price = fuel === 'АИ-95' ? details.price95 : state.price;
+      for (const text of [fuel, `${price.toFixed(2).replace('.', ',')} ₽`]) {
+        const cell = document.createElement('td'); cell.textContent = text; row.append(cell);
+      }
+      const stock = document.createElement('td');
+      const dot = document.createElement('span'); dot.className = 'station-stock'; dot.style.background = stockColors[state.stock];
+      stock.append(dot, ['Нет', 'Мало', 'В наличии'][state.stock]); row.append(stock); rows.append(row);
+    });
+    document.querySelector('#stationMapLink').href = `https://yandex.ru/maps/51/samara/?ll=${activeStation.lon}%2C${activeStation.lat}&z=16&pt=${activeStation.lon}%2C${activeStation.lat}%2Cpm2blm`;
+    stationDialog.showModal();
+  });
+});
+document.querySelector('.station-dialog-close').addEventListener('click', () => stationDialog.close());
+stationDialog.addEventListener('click', event => {
+  const rect = stationDialog.getBoundingClientRect();
+  if (event.target === stationDialog && (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom)) stationDialog.close();
+});
+document.querySelector('#stationLocate').addEventListener('click', () => {
+  const status = document.querySelector('#stationLocationStatus');
+  if (!navigator.geolocation) { status.textContent = 'Браузер не поддерживает определение местоположения.'; return; }
+  const button = document.querySelector('#stationLocate'); button.disabled = true;
+  status.textContent = 'Определяем ваше местоположение…';
+  navigator.geolocation.getCurrentPosition(position => {
+    userCoordinates = [position.coords.latitude, position.coords.longitude];
+    showStationDistance();
+    status.textContent = 'Расстояние по прямой; путь по дороге может быть длиннее.';
+    button.disabled = false;
+  }, error => {
+    status.textContent = error.code === 1 ? 'Доступ к местоположению запрещён. Разрешите его в настройках браузера и повторите.' : 'Не удалось определить местоположение. Попробуйте ещё раз.';
+    button.disabled = false;
+  }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 });
+});
