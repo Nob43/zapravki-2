@@ -1,4 +1,4 @@
-﻿* { box-sizing: border-box; }
+* { box-sizing: border-box; }
 :root { --ink: #11131f; --paper: #f8f8ff; --muted: #a3a8ba; }
 html { min-width: 320px; background: #f8f8ff; }
 body { margin: 0; color: var(--ink); font-family: 'Cormorant Garamond', 'Times New Roman', serif; }
@@ -145,3 +145,4 @@ section h2 { margin: 0; text-align: center; font-size: 5.65cqw; font-weight: 500
 .station-marker span { display: grid; place-items: center; width: 30px; height: 30px; border: 3px solid white; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); box-shadow: 0 2px 6px #0005; }
 .station-marker b { transform: rotate(45deg); color: white; font: bold 18px Arial, sans-serif; }
 .map-popup p { margin: 6px 0; }.map-popup small { color: #687287; }
+.map-credit { position: absolute; z-index: 2; bottom: 5.8%; right: 3%; color: #4d5b75; font: 11px Arial, sans-serif; text-decoration: none; }
