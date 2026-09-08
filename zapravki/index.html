@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=esri-map-3" />
   </head>
   <body>
     <main class="app-shell">
@@ -163,7 +163,7 @@
       </section>
       <section class="map-screen" aria-label="Карта заправок Самары" hidden>
         <div id="samaraMap" aria-label="Интерактивная карта Самары"></div>
-        <a class="map-credit" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">© OpenStreetMap contributors</a>
+        <div class="map-credit">Карта: <a href="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer" target="_blank" rel="noopener noreferrer" title="Sources: Esri, HERE, Garmin, USGS, Intermap, INCREMENT P, NRCan, Esri Japan, METI, Esri China (Hong Kong), Esri Korea, Esri (Thailand), NGCC, OpenStreetMap contributors, GIS User Community">© Esri и поставщики данных</a> · АЗС: <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">© OpenStreetMap</a></div>
         <div class="map-legend"><span><i class="stock-green"></i>Есть</span><span><i class="stock-yellow"></i>Мало</span><span><i class="stock-red"></i>Нет</span><small>Остатки, цены и очереди — демо</small></div>
         <form class="map-search" role="search">
           <span class="search-icon" aria-hidden="true"></span>
@@ -200,9 +200,11 @@
     </main>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="script.js"></script>
+    <script src="script.js?v=esri-map-3"></script>
   </body>
 </html>
+
+
 
 
 
