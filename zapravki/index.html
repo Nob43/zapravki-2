@@ -1,0 +1,211 @@
+﻿<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Заправки рядом</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div class="location-title"><span class="pin pin-filled" aria-hidden="true"></span> Самара</div>
+        <h1>Ваше местоположение</h1>
+      </header>
+
+      <section class="search-area" aria-label="Поиск заправки">
+        <label class="search-box">
+          <span class="search-icon" aria-hidden="true"></span>
+          <input aria-label="Найти АЗС или адрес" type="search" placeholder="Найти АЗС или адрес" />
+        </label>
+        <button class="primary-action" type="button" id="findStation">
+          <span class="fuel-pump" aria-hidden="true"></span>
+          <span>Найти заправку</span>
+        </button>
+        <div class="quick-actions">
+          <button class="quick-button reserve-button" type="button" id="reserveButton">
+            <span class="calendar-icon" aria-hidden="true"></span>
+            <span>Забронировать<br />топливо</span>
+          </button>
+          <button class="quick-button queue-button" type="button" id="queueButton">
+            <span class="queue-icon" aria-hidden="true"></span>
+            <span>Встать в очередь</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="fuel-panel">
+        <h2>Какое топливо ищем?</h2>
+        <div class="fuel-types" role="group" aria-label="Выбор топлива">
+          <button type="button">АИ-98</button>
+          <button type="button">АИ-100</button>
+          <button type="button">АИ-92</button>
+          <button class="selected" type="button">АИ-95</button>
+          <button type="button">ДТ</button>
+        </div>
+      </section>
+
+      <section class="nearby-panel">
+        <h2>АЗС рядом:</h2>
+        <div class="station-grid">
+          <article class="station-card">
+            <div><span class="mini-pump" aria-hidden="true"></span> АЗС №14</div>
+            <div><span class="pin" aria-hidden="true"></span> 0,7 км</div>
+            <div>⌁ 3 мин</div>
+          </article>
+          <article class="station-card">
+            <div><span class="mini-pump" aria-hidden="true"></span> АЗС №20</div>
+            <div><span class="pin" aria-hidden="true"></span> 1,4 км</div>
+            <div>⌁ 5 мин</div>
+          </article>
+          <article class="station-card">
+            <div><span class="mini-pump" aria-hidden="true"></span> АЗС №11</div>
+            <div><span class="pin" aria-hidden="true"></span> 1,8 км</div>
+            <div>⌁ 6 мин</div>
+          </article>
+        </div>
+      </section>
+
+      <section class="prices-panel">
+        <h2>Лучшие цены рядом:</h2>
+        <div class="price-grid">
+          <article class="price-card">
+            <div><span class="mini-pump" aria-hidden="true"></span> АЗС №11</div>
+            <div><span class="price-tag" aria-hidden="true"></span> 67,50 ₽/л</div>
+          </article>
+          <article class="price-card">
+            <div><span class="mini-pump" aria-hidden="true"></span> АЗС №14</div>
+            <div><span class="price-tag" aria-hidden="true"></span> 67,80 ₽/л</div>
+          </article>
+          <article class="price-card">
+            <div><span class="mini-pump" aria-hidden="true"></span> АЗС №20</div>
+            <div><span class="price-tag" aria-hidden="true"></span> 67,80 ₽/л</div>
+          </article>
+        </div>
+      </section>
+
+      <section class="booking-screen" aria-label="Брони" hidden>
+        <div class="booking-tabs" role="tablist" aria-label="Брони">
+          <button id="active-tab" type="button" role="tab" aria-selected="false" aria-controls="active-bookings" tabindex="-1">Активные</button>
+          <button id="history-tab" type="button" role="tab" aria-selected="true" aria-controls="history-bookings">История</button>
+        </div>
+        <div id="history-bookings" class="booking-list" role="tabpanel" aria-labelledby="history-tab">
+          <article class="booking-card">
+            <span class="booking-status">Завершено</span>
+            <div><span class="mini-pump" aria-hidden="true"></span> АЗС №14</div>
+            <div>АИ-95 40 л</div>
+            <div>7 сентября 18:30</div>
+          </article>
+          <article class="booking-card">
+            <span class="booking-status">Отменено</span>
+            <div><span class="mini-pump" aria-hidden="true"></span> АЗС №20</div>
+            <div>АИ-100 30 л</div>
+            <div>5 сентября 14:00</div>
+          </article>
+        </div>
+        <div id="active-bookings" class="booking-list" role="tabpanel" aria-labelledby="active-tab" hidden>
+          <p class="booking-empty">Активных бронирований пока нет</p>
+        </div>
+      </section>
+
+      <section class="notifications-screen" aria-labelledby="notifications-title" hidden>
+        <h2 id="notifications-title">Уведомления</h2>
+        <section class="notification-group notification-today" aria-labelledby="today-title">
+          <h3 id="today-title">Сегодня:</h3>
+          <article class="notification-card queue-notice">
+            <p>Скоро ваша очередь<br>Перед вами остался 1 автомобиль</p>
+            <time class="notification-time">18:32</time>
+          </article>
+          <article class="notification-card departure-notice">
+            <p>Пора выезжать<br>До АЗС ~12 минут<br>Бронь на 18:30</p>
+            <time class="notification-time">18:10</time>
+          </article>
+          <article class="notification-card confirmed-notice">
+            <p>Бронь подтверждена<br>АЗС №14&nbsp; АИ-95&nbsp; 40 л<br>Сегодня, 18:30–18:45</p>
+            <time class="notification-time">14:35</time>
+          </article>
+        </section>
+        <section class="notification-group notification-earlier" aria-labelledby="earlier-title">
+          <h3 id="earlier-title">Ранее:</h3>
+          <article class="notification-card completed-notice">
+            <p>Заправка завершена<br>АЗС №20&nbsp; АИ-95&nbsp; 30 л</p>
+            <span class="notification-time">Вчера, 16:42</span>
+          </article>
+          <article class="notification-card cancelled-notice">
+            <p>Бронь отменена<br>АЗС №8&nbsp; АИ-100&nbsp; 20 л</p>
+            <span class="notification-time">5 сентября, 13:20</span>
+          </article>
+        </section>
+      </section>
+      <section class="profile-screen" aria-label="Профиль" hidden>
+        <div class="profile-sky" aria-hidden="true"></div>
+        <div class="profile-avatar" role="img" aria-label="Аватар пользователя"></div>
+        <h2 class="profile-name">Имя пользователя</h2>
+        <div class="profile-details">
+          <div class="profile-field">
+            <h3>Мой номер телефона</h3>
+            <p>+7 000 000 00 00</p>
+          </div>
+          <div class="profile-field">
+            <h3>Мои автомобили</h3>
+            <p>Toyota Camry АИ-95</p>
+          </div>
+        </div>
+        <div class="profile-actions">
+          <button type="button" id="profileHistory">История заправок</button>
+          <button type="button" id="profileSettings">Настройки</button>
+          <button type="button" id="profileLogout">Выйти из аккаунта</button>
+        </div>
+      </section>
+      <section class="map-screen" aria-label="Карта заправок Самары" hidden>
+        <div id="samaraMap" aria-label="Интерактивная карта Самары"></div>
+        <div class="map-legend"><span><i class="stock-green"></i>Есть</span><span><i class="stock-yellow"></i>Мало</span><span><i class="stock-red"></i>Нет</span><small>Остатки, цены и очереди — демо</small></div>
+        <form class="map-search" role="search">
+          <span class="search-icon" aria-hidden="true"></span>
+          <input id="mapQuery" type="search" aria-label="Найти АЗС или адрес в Самаре" placeholder="Найти АЗС или адрес" autocomplete="off">
+          <button id="toggleMapFilters" type="button" aria-label="Показать или скрыть фильтры" aria-expanded="true" aria-controls="mapFilters">⇅</button>
+        </form>
+        <div class="map-results" id="mapResults" aria-live="polite"></div>
+        <div class="map-filters" id="mapFilters">
+          <fieldset class="map-fuels"><legend>Топливо:</legend>
+            <label><input type="radio" name="mapFuel" value="АИ-98" checked><span>АИ-98</span></label>
+            <label><input type="radio" name="mapFuel" value="АИ-100"><span>АИ-100</span></label>
+            <label><input type="radio" name="mapFuel" value="АИ-92"><span>АИ-92</span></label>
+            <label><input type="radio" name="mapFuel" value="АИ-95"><span>АИ-95</span></label>
+            <label><input type="radio" name="mapFuel" value="ДТ"><span>ДТ</span></label>
+          </fieldset>
+          <fieldset><legend>Показывать:</legend>
+            <label><input id="onlyAvailable" type="checkbox">Только топливо в наличии</label>
+            <label><input id="onlyNoQueue" type="checkbox" checked>Только без очереди</label>
+          </fieldset>
+          <fieldset><legend>Сортировка:</legend>
+            <label><input type="radio" name="mapSort" value="distance" checked>Ближайшее</label>
+            <label><input type="radio" name="mapSort" value="price">Дешевле</label>
+            <label><input type="radio" name="mapSort" value="wait">Меньше ожидание</label>
+          </fieldset>
+        </div>
+      </section>
+      <nav class="bottom-nav" aria-label="Основная навигация">
+        <a class="active" href="#home">Главная</a>
+        <a href="#map">Карта</a>
+        <a href="#booking">Брони</a>
+        <a href="#notifications">Уведомления</a>
+        <a href="#profile">Профиль</a>
+      </nav>
+    </main>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
+
+
+
+
+
+
+
