@@ -148,3 +148,28 @@ section h2 { margin: 0; text-align: center; font-size: 5.65cqw; font-weight: 500
 .map-credit { position: absolute; z-index: 2; bottom: 5.8%; right: 3%; color: #4d5b75; font: 11px Arial, sans-serif; text-decoration: none; }
 
 .map-credit a { color: inherit; }
+.nearby-panel .station-grid { gap: 3.5cqw; margin-top: 3.2cqw; }
+.nearby-panel .station-card { min-width: 0; padding: 2.5cqw 1cqw; border-radius: 4cqw; background: #f8f8ff; text-align: center; font-size: 3.4cqw; box-shadow: -.6cqw .8cqw 1.5cqw #0004; }
+.nearby-panel .station-card .pin { margin-left: 0; }
+.nearby-panel .station-card > div:last-child { padding-left: 0; }
+.station-dialog { width: min(92vw, 540px); max-height: 90dvh; padding: 28px; border: 0; border-radius: 26px; background: #f8f8ff; color: #171827; box-shadow: 0 20px 80px #12183455; }
+.station-dialog::backdrop { background: #111a3d70; }
+.station-dialog-close { position: absolute; right: 14px; top: 10px; width: 38px; height: 38px; border-radius: 50%; background: #e5e1fc; font: 28px Arial, sans-serif; }
+.station-dialog-eyebrow { margin: 0 30px 5px 0; font: 13px Arial, sans-serif; color: #6d7390; }
+.station-dialog h2 { margin: 0; font-size: 36px; font-weight: 500; }
+.station-brand { margin: 0 0 12px; font-size: 24px; }
+.station-demo-note { font: 12px/1.5 Arial, sans-serif; color: #636b81; }
+.station-facts { margin: 18px 0; font: 15px/1.5 Arial, sans-serif; }
+.station-facts > div { padding: 9px 0; border-bottom: 1px solid #e2e3ee; }
+.station-facts dt { color: #69718a; font-size: 12px; }
+.station-facts dd { margin: 2px 0 0; }
+.station-secondary { padding: 10px 15px; border-radius: 14px; background: #e5e1fc; font: 14px Arial, sans-serif; }
+.station-location-status { font: 12px/1.4 Arial, sans-serif; color: #626b85; }
+.station-dialog h3 { margin: 18px 0 8px; font-size: 27px; font-weight: 500; }
+.station-fuel-table { width: 100%; border-collapse: collapse; font: 14px/1.4 Arial, sans-serif; }
+.station-fuel-table th, .station-fuel-table td { padding: 10px 4px; text-align: left; border-bottom: 1px solid #e2e3ee; }
+.station-fuel-table th { font-size: 12px; color: #69718a; font-weight: 400; }
+.station-fuel-table tr.current-fuel { background: #e9e4ff; }
+.station-stock { display: inline-block; width: 8px; height: 8px; margin-right: 5px; border-radius: 50%; }
+.station-map-link { display: block; margin-top: 22px; padding: 14px; border-radius: 24px; text-align: center; background: #1c46ad; color: white; text-decoration: none; font: 15px Arial, sans-serif; }
+@media (max-width: 400px) { .station-dialog { padding: 22px 16px; } .station-fuel-table { font-size: 12px; } }
