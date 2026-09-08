@@ -146,3 +146,5 @@ section h2 { margin: 0; text-align: center; font-size: 5.65cqw; font-weight: 500
 .station-marker b { transform: rotate(45deg); color: white; font: bold 18px Arial, sans-serif; }
 .map-popup p { margin: 6px 0; }.map-popup small { color: #687287; }
 .map-credit { position: absolute; z-index: 2; bottom: 5.8%; right: 3%; color: #4d5b75; font: 11px Arial, sans-serif; text-decoration: none; }
+
+.map-credit a { color: inherit; }
