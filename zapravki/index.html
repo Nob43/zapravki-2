@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=station-cards-5" />
+    <link rel="stylesheet" href="styles.css?v=station-design-6" />
   </head>
   <body>
     <main class="app-shell">
@@ -198,28 +198,32 @@
       </nav>
     </main>
     <dialog id="stationDialog" class="station-dialog" aria-labelledby="stationDialogTitle">
-      <button class="station-dialog-close" type="button" aria-label="Закрыть карточку">×</button>
-      <p class="station-dialog-eyebrow">Информация о заправке</p>
-      <h2 id="stationDialogTitle"></h2>
-      <p id="stationBrand" class="station-brand"></p>
-      <p class="station-demo-note">Демонстрационная карточка: номер, цены, наличие, рейтинг и часы работы — примеры. Адрес и координаты — из карты.</p>
-      <dl class="station-facts">
-        <div><dt>Адрес</dt><dd id="stationAddress"></dd></div>
-        <div><dt>Расстояние от вас</dt><dd id="stationDistance">Определите местоположение</dd></div>
-        <div><dt>Рейтинг · демо</dt><dd id="stationRating"></dd></div>
-        <div><dt>Часы работы · демо</dt><dd id="stationHours"></dd></div>
-      </dl>
-      <button id="stationLocate" class="station-secondary" type="button">Определить моё местоположение</button>
-      <p id="stationLocationStatus" class="station-location-status" role="status"></p>
-      <h3>Топливо и цены</h3>
-      <table class="station-fuel-table"><thead><tr><th>Топливо</th><th>Цена за литр</th><th>Наличие</th></tr></thead><tbody id="stationFuelRows"></tbody></table>
-      <a id="stationMapLink" class="station-map-link" target="_blank" rel="noopener noreferrer">Открыть в Яндекс Картах ↗</a>
+      <header class="station-hero">
+        <button class="station-dialog-close" type="button" aria-label="Закрыть карточку">×</button>
+        <span class="station-hero-icon" aria-hidden="true">⛽</span>
+        <div><p class="station-dialog-eyebrow">ВАША ОСТАНОВКА В ПУТИ</p><h2 id="stationDialogTitle"></h2><p id="stationBrand" class="station-brand"></p></div>
+      </header>
+      <div class="station-dialog-body">
+        <dl class="station-facts">
+          <div class="station-address-block"><dt>⌖ &nbsp; Адрес заправки</dt><dd id="stationAddress"></dd></div>
+          <div><dt>Расстояние от вас</dt><dd id="stationDistance">Определите местоположение</dd></div>
+          <div><dt>Рейтинг · демо</dt><dd id="stationRating"></dd></div>
+          <div class="station-hours-block"><dt>Часы работы · демо</dt><dd id="stationHours"></dd></div>
+        </dl>
+        <button id="stationLocate" class="station-secondary" type="button">⌖ &nbsp; Определить моё местоположение</button>
+        <p id="stationLocationStatus" class="station-location-status" role="status"></p>
+        <div class="station-fuel-heading"><h3>Топливо и цены</h3><span>за 1 литр</span></div>
+        <table class="station-fuel-table"><thead><tr><th>Топливо</th><th>Цена</th><th>Наличие</th></tr></thead><tbody id="stationFuelRows"></tbody></table>
+        <a id="stationMapLink" class="station-map-link" target="_blank" rel="noopener noreferrer">Открыть в Яндекс Картах <span aria-hidden="true">↗</span></a>
+        <p class="station-demo-note">Демо: номер АЗС, цены, наличие, рейтинг и график — примеры. Адрес и координаты взяты из карты.</p>
+      </div>
     </dialog>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <script src="https://api-maps.yandex.ru/2.1/?apikey=521f92b2-d4b2-47e9-a333-72b279b98799&amp;lang=ru_RU"></script>
-    <script src="script.js?v=station-cards-5"></script>
+    <script src="script.js?v=station-design-6"></script>
   </body>
 </html>
+
 
 
 
