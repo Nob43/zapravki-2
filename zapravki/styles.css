@@ -152,24 +152,43 @@ section h2 { margin: 0; text-align: center; font-size: 5.65cqw; font-weight: 500
 .nearby-panel .station-card { min-width: 0; padding: 2.5cqw 1cqw; border-radius: 4cqw; background: #f8f8ff; text-align: center; font-size: 3.4cqw; box-shadow: -.6cqw .8cqw 1.5cqw #0004; }
 .nearby-panel .station-card .pin { margin-left: 0; }
 .nearby-panel .station-card > div:last-child { padding-left: 0; }
-.station-dialog { width: min(92vw, 540px); max-height: 90dvh; padding: 28px; border: 0; border-radius: 26px; background: #f8f8ff; color: #171827; box-shadow: 0 20px 80px #12183455; }
-.station-dialog::backdrop { background: #111a3d70; }
-.station-dialog-close { position: absolute; right: 14px; top: 10px; width: 38px; height: 38px; border-radius: 50%; background: #e5e1fc; font: 28px Arial, sans-serif; }
-.station-dialog-eyebrow { margin: 0 30px 5px 0; font: 13px Arial, sans-serif; color: #6d7390; }
-.station-dialog h2 { margin: 0; font-size: 36px; font-weight: 500; }
-.station-brand { margin: 0 0 12px; font-size: 24px; }
-.station-demo-note { font: 12px/1.5 Arial, sans-serif; color: #636b81; }
-.station-facts { margin: 18px 0; font: 15px/1.5 Arial, sans-serif; }
-.station-facts > div { padding: 9px 0; border-bottom: 1px solid #e2e3ee; }
-.station-facts dt { color: #69718a; font-size: 12px; }
-.station-facts dd { margin: 2px 0 0; }
-.station-secondary { padding: 10px 15px; border-radius: 14px; background: #e5e1fc; font: 14px Arial, sans-serif; }
-.station-location-status { font: 12px/1.4 Arial, sans-serif; color: #626b85; }
-.station-dialog h3 { margin: 18px 0 8px; font-size: 27px; font-weight: 500; }
-.station-fuel-table { width: 100%; border-collapse: collapse; font: 14px/1.4 Arial, sans-serif; }
-.station-fuel-table th, .station-fuel-table td { padding: 10px 4px; text-align: left; border-bottom: 1px solid #e2e3ee; }
-.station-fuel-table th { font-size: 12px; color: #69718a; font-weight: 400; }
-.station-fuel-table tr.current-fuel { background: #e9e4ff; }
-.station-stock { display: inline-block; width: 8px; height: 8px; margin-right: 5px; border-radius: 50%; }
-.station-map-link { display: block; margin-top: 22px; padding: 14px; border-radius: 24px; text-align: center; background: #1c46ad; color: white; text-decoration: none; font: 15px Arial, sans-serif; }
-@media (max-width: 400px) { .station-dialog { padding: 22px 16px; } .station-fuel-table { font-size: 12px; } }
+
+.station-dialog { width: min(94vw, 490px); max-height: 92dvh; padding: 0; overflow-y: auto; border: 1px solid #ffffff80; border-radius: 30px; background: #f8f8ff; color: #171827; box-shadow: 0 30px 100px #16214755; scrollbar-width: thin; }
+.station-dialog::backdrop { background: #15204475; backdrop-filter: blur(5px); }
+.station-hero { position: relative; display: flex; align-items: center; gap: 19px; padding: 30px 28px 26px; overflow: hidden; background: radial-gradient(ellipse at 100% 0%, #7291e2 0%, transparent 60%), linear-gradient(120deg,#173caa,#335ac0); color: white; border-radius: 29px 29px 36px 36px; }
+.station-hero-icon { display: grid; place-items: center; flex-shrink: 0; width: 65px; height: 75px; border: 1px solid #ffffff35; border-radius: 22px; background: #ffffff17; font: 32px Arial,sans-serif; }
+.station-dialog-close { position: absolute; z-index: 1; top: 12px; right: 12px; display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 1px solid #ffffff35; border-radius: 50%; background: #ffffff20; color: white; font: 24px Arial,sans-serif; }
+.station-dialog-close:hover { background: #ffffff40; }
+.station-dialog-eyebrow { margin: 0 12px 5px 0; color: #dbe4ff; font: 9px/1.4 Arial,sans-serif; letter-spacing: 1.6px; }
+.station-dialog h2 { margin: 0; font-size: 43px; font-weight: 500; line-height: 1; }
+.station-brand { margin: 6px 0 0; font-size: 23px; line-height: 1; color: #e4e9ff; }
+.station-dialog-body { padding: 20px 25px 18px; }
+.station-facts { display: grid; grid-template-columns: 1.3fr 1fr; gap: 9px; margin: 0 0 12px; font: 14px/1.4 Arial,sans-serif; }
+.station-facts > div { padding: 12px 14px; border: 1px solid #dedcf280; border-radius: 15px; background: #eeecfa; }
+.station-facts .station-address-block { grid-column: 1 / -1; background: #f0f2fc; }
+.station-facts .station-hours-block { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.station-facts dt { color: #778099; font-size: 11px; }
+.station-facts dd { margin: 5px 0 0; font-weight: 500; }
+.station-hours-block dd { margin: 0; }
+#stationRating { color: #89652b; }
+.station-secondary { width: 100%; min-height: 40px; padding: 10px; border: 1px solid #d6d5ef; border-radius: 14px; background: #e5e0f8; color: #454e87; font: 12px Arial,sans-serif; transition: background .15s; }
+.station-secondary:hover { background: #dcd5f6; }
+.station-secondary:disabled { opacity: .6; cursor: wait; }
+.station-location-status { margin: 8px 0 0; font: 11px/1.4 Arial,sans-serif; color: #68748a; }
+.station-location-status:empty { display: none; }
+.station-fuel-heading { display: flex; align-items: baseline; justify-content: space-between; margin-top: 18px; }
+.station-fuel-heading h3 { margin: 0; font-size: 28px; font-weight: 500; }
+.station-fuel-heading > span { font: 11px Arial,sans-serif; color: #81869b; }
+.station-fuel-table { width: 100%; border-collapse: separate; border-spacing: 0 5px; font: 13px/1.4 Arial,sans-serif; }
+.station-fuel-table th { padding: 2px 12px; text-align: left; color: #858ba1; font-size: 10px; font-weight: 400; }
+.station-fuel-table td { padding: 10px 12px; background: #fff; border-top: 1px solid #eeedf6; border-bottom: 1px solid #eeedf6; }
+.station-fuel-table td:first-child { border-radius: 11px 0 0 11px; font-weight: 600; }
+.station-fuel-table td:last-child { border-radius: 0 11px 11px 0; font-size: 11px; white-space: nowrap; }
+.station-fuel-table tr.current-fuel td { background: #e4def9; border-color: #ddd4f8; color: #302970; }
+.station-fuel-table td:nth-child(2) { font-weight: 600; }
+.station-stock { display: inline-block; width: 7px; height: 7px; margin-right: 5px; border-radius: 50%; }
+.station-map-link { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 14px; padding: 16px 21px; border-radius: 19px; background: #204bb5; color: white; text-decoration: none; font: 14px Arial,sans-serif; box-shadow: 0 6px 14px #204bb52b; }
+.station-map-link:hover { background: #173c9c; }
+.station-map-link span { font-size: 23px; line-height: 1; }
+.station-demo-note { margin: 14px 3px 0; font: 10px/1.5 Arial,sans-serif; color: #858b9e; }
+@media (max-width: 400px) { .station-hero { padding: 27px 20px 23px; gap: 14px; } .station-dialog-body { padding: 16px; } .station-dialog h2 { font-size: 38px; } .station-hero-icon { width: 53px; height: 64px; } .station-dialog-eyebrow { font-size: 8px; letter-spacing: 1px; } .station-facts { font-size: 12px; } .station-fuel-table td { padding: 9px; } }
