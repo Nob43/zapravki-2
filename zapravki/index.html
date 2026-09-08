@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=station-design-6" />
+    <link rel="stylesheet" href="styles.css?v=wallet-design-7" />
   </head>
   <body>
     <main class="app-shell">
@@ -154,11 +154,29 @@
             <p>Toyota Camry АИ-95</p>
           </div>
         </div>
+          <div class="profile-field profile-balance">
+            <h3>Мой баланс:</h3>
+            <div class="profile-balance-row"><p>1 200₽</p><a href="#transactions" class="profile-transactions" aria-label="История пополнений и операций"><span class="balance-plus" aria-hidden="true">+</span><span>История операций →</span></a></div>
+          </div>
         <div class="profile-actions">
           <button type="button" id="profileHistory">История заправок</button>
           <button type="button" id="profileSettings">Настройки</button>
           <button type="button" id="profileLogout">Выйти из аккаунта</button>
         </div>
+      </section>
+      <section class="transactions-screen" aria-labelledby="transactionsTitle" hidden>
+        <header class="transactions-header"><a href="#profile" class="transactions-back" aria-label="Назад в профиль">←</a><span>Личный кабинет</span></header>
+        <h2 id="transactionsTitle">История операций</h2>
+        <p class="transactions-subtitle">Ваши пополнения и оплата топлива</p>
+        <div class="wallet-summary"><span>Мой баланс</span><strong>1 200 <small>₽</small></strong><div><span>Пополнено <b>5 000 ₽</b></span><span>Потрачено <b>3 800 ₽</b></span></div></div>
+        <div class="transaction-filters" role="group" aria-label="Тип операций"><button type="button" data-transaction-filter="all" aria-pressed="true">Все</button><button type="button" data-transaction-filter="topup" aria-pressed="false">Пополнения</button><button type="button" data-transaction-filter="payment" aria-pressed="false">Оплата</button></div>
+        <div class="transaction-list" aria-live="polite">
+          <article class="transaction-card" data-transaction-type="payment"><span class="transaction-icon payment-icon" aria-hidden="true">↗</span><div><h3>Заправка · АЗС №14</h3><p>АИ-95 · 40 л</p><time datetime="2026-09-07T18:30">7 сентября, 18:30</time></div><div class="transaction-amount"><strong>−2 700 ₽</strong><span>Оплачено</span></div></article>
+          <article class="transaction-card" data-transaction-type="topup"><span class="transaction-icon" aria-hidden="true">+</span><div><h3>Пополнение баланса</h3><p>Банковская карта</p><time datetime="2026-09-07T14:20">7 сентября, 14:20</time></div><div class="transaction-amount topup-amount"><strong>+3 000 ₽</strong><span>Зачислено</span></div></article>
+          <article class="transaction-card" data-transaction-type="payment"><span class="transaction-icon payment-icon" aria-hidden="true">↗</span><div><h3>Заправка · АЗС №20</h3><p>Оплата топлива</p><time datetime="2026-09-06T16:42">6 сентября, 16:42</time></div><div class="transaction-amount"><strong>−1 100 ₽</strong><span>Оплачено</span></div></article>
+          <article class="transaction-card" data-transaction-type="topup"><span class="transaction-icon" aria-hidden="true">+</span><div><h3>Пополнение баланса</h3><p>Система быстрых платежей</p><time datetime="2026-09-05T12:10">5 сентября, 12:10</time></div><div class="transaction-amount topup-amount"><strong>+2 000 ₽</strong><span>Зачислено</span></div></article>
+        </div>
+        <p class="transactions-note">Демонстрационные баланс и операции. Реальные платежи не подключены.</p>
       </section>
       <section class="map-screen" aria-label="Карта заправок Самары" hidden>
         <div id="samaraMap" aria-label="Интерактивная карта Самары"></div>
@@ -220,9 +238,10 @@
     </dialog>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <script src="https://api-maps.yandex.ru/2.1/?apikey=521f92b2-d4b2-47e9-a333-72b279b98799&amp;lang=ru_RU"></script>
-    <script src="script.js?v=station-design-6"></script>
+    <script src="script.js?v=wallet-design-7"></script>
   </body>
 </html>
+
 
 
 
