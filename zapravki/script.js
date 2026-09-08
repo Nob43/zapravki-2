@@ -37,7 +37,9 @@ const profileScreen = document.querySelector('.profile-screen');
 const navLinks = [...document.querySelectorAll('.bottom-nav a')];
 
 function renderRoute() {
-  const route = ['#booking', '#notifications', '#profile', '#map'].includes(location.hash) ? location.hash.slice(1) : 'home';
+  const route = ['#booking', '#notifications', '#profile', '#map', '#transactions'].includes(location.hash) ? location.hash.slice(1) : 'home';
+  shell.classList.toggle('show-transactions', route === 'transactions');
+  document.querySelector('.transactions-screen').hidden = route !== 'transactions';
   const bookingVisible = route === 'booking';
   shell.classList.toggle('show-booking', bookingVisible);
   bookingScreen.hidden = !bookingVisible;
@@ -49,7 +51,7 @@ function renderRoute() {
   document.querySelector('.map-screen').hidden = route !== 'map';
   if (route === 'map') requestAnimationFrame(initSamaraMap);
   navLinks.forEach(link => {
-    const selected = link.hash === `#${route}`;
+    const selected = link.hash === `#${route === 'transactions' ? 'profile' : route}`;
     link.classList.toggle('active', selected);
     if (selected) link.setAttribute('aria-current', 'page');
     else link.removeAttribute('aria-current');
@@ -300,4 +302,13 @@ document.querySelector('#stationLocate').addEventListener('click', () => {
     status.textContent = error.code === 1 ? 'Доступ к местоположению запрещён. Разрешите его в настройках браузера и повторите.' : 'Не удалось определить местоположение. Попробуйте ещё раз.';
     button.disabled = false;
   }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 });
+});
+
+document.querySelectorAll('[data-transaction-filter]').forEach(button => {
+  button.addEventListener('click', () => {
+    document.querySelectorAll('[data-transaction-filter]').forEach(tab => tab.setAttribute('aria-pressed', String(tab === button)));
+    document.querySelectorAll('[data-transaction-type]').forEach(card => {
+      card.hidden = button.dataset.transactionFilter !== 'all' && card.dataset.transactionType !== button.dataset.transactionFilter;
+    });
+  });
 });
